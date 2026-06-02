@@ -1,4 +1,5 @@
 import BeforeAfter from "./BeforeAfter";
+import HeroMontage from "./HeroMontage";
 import Reveal from "./Reveal";
 import { repairs } from "./gallery-data";
 
@@ -51,6 +52,8 @@ export default function Home() {
 
       {/* HERO */}
       <header className="hero" id="top">
+        <HeroMontage />
+        <div className="hero-overlay" aria-hidden="true" />
         <div className="container">
           <span className="eyebrow">San Diego · Surfboard Ding Repair</span>
           <h1>
