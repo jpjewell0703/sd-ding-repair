@@ -5,7 +5,7 @@ import { useRef, useState, useCallback } from "react";
 // Interactive draggable before/after comparison slider.
 // Falls back to colored placeholders when no image URLs are provided.
 export default function BeforeAfter({ before, after, title }) {
-  const [pos, setPos] = useState(50);
+  const [pos, setPos] = useState(90);
   const ref = useRef(null);
   const dragging = useRef(false);
 
