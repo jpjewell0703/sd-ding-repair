@@ -1,0 +1,34 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SD Ding Repair">
+  <defs>
+    <path id="topArc" d="M 32,100 A 68,68 0 0 1 168,100" />
+  </defs>
+
+  <!-- outer dark ring -->
+  <circle cx="100" cy="100" r="98" fill="#073642" />
+  <!-- blue band -->
+  <circle cx="100" cy="100" r="92" fill="#1f8a9c" />
+  <circle cx="100" cy="100" r="71" fill="none" stroke="#073642" stroke-width="3" />
+  <!-- inner white face -->
+  <circle cx="100" cy="100" r="68" fill="#f7fbfb" />
+
+  <!-- top curved text -->
+  <text font-family="Helvetica, Arial, sans-serif" font-weight="800" font-size="20"
+        letter-spacing="2" fill="#f7fbfb">
+    <textPath href="#topArc" startOffset="50%" text-anchor="middle">SD DING REPAIR</textPath>
+  </text>
+
+  <!-- surfboard -->
+  <g stroke="#073642" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M100,52 C113,74 113,128 100,150 C87,128 87,74 100,52 Z" />
+    <line x1="100" y1="58" x2="100" y2="144" />
+  </g>
+
+  <!-- bottom ribbon -->
+  <g>
+    <path d="M18,150 L182,150 L172,176 L28,176 Z" fill="#0d5a6b" />
+    <path d="M18,150 L8,168 L24,164 Z" fill="#073642" />
+    <path d="M182,150 L192,168 L176,164 Z" fill="#073642" />
+    <text x="100" y="169" font-family="Helvetica, Arial, sans-serif" font-weight="800"
+          font-size="16" letter-spacing="1.5" fill="#f7fbfb" text-anchor="middle">SD DING REPAIR</text>
+  </g>
+</svg>

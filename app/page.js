@@ -36,7 +36,8 @@ export default function Home() {
       <nav className="nav">
         <div className="container nav-inner">
           <a href="#top" className="brand">
-            <span className="board">🏄</span> SD Ding Repair
+            <img className="board" src="/logo.svg" alt="SD Ding Repair logo" width="40" height="40" />
+            SD Ding Repair
           </a>
           <div className="nav-links">
             <a href="#gallery">Gallery</a>
@@ -226,6 +227,9 @@ export default function Home() {
           <div>
             © {new Date().getFullYear()} SD Ding Repair · San Diego, CA · Surfboard
             Ding &amp; Damage Repair
+          </div>
+          <div style={{ marginTop: "0.4rem", opacity: 0.8 }}>
+            A Sigma Sigma Holdings LLC company
           </div>
         </div>
       </footer>

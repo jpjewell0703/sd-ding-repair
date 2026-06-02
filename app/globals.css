@@ -120,18 +120,20 @@ h3 {
 }
 
 .brand .board {
-  font-size: 1.4rem;
+  width: 40px;
+  height: 40px;
   display: inline-block;
-  animation: bob 3s ease-in-out infinite;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+  animation: bob 3.5s ease-in-out infinite;
 }
 
 @keyframes bob {
   0%,
   100% {
-    transform: rotate(-12deg) translateY(0);
+    transform: translateY(0);
   }
   50% {
-    transform: rotate(-4deg) translateY(-3px);
+    transform: translateY(-3px);
   }
 }
 
@@ -542,6 +544,16 @@ h3 {
   border-radius: 12px;
   background: rgba(70, 197, 214, 0.16);
   flex-shrink: 0;
+}
+
+.contact-card > span:last-child {
+  min-width: 0;
+}
+
+.contact-card .value {
+  display: block;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .contact-card .label {
