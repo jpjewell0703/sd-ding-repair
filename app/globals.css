@@ -631,9 +631,9 @@ h3 {
   box-shadow: 0 14px 30px rgba(7, 54, 66, 0.12);
 }
 
-.service .ic {
-  font-size: 1.8rem;
-  margin-bottom: 0.7rem;
+.service {
+  display: flex;
+  flex-direction: column;
 }
 
 .service h3 {
@@ -644,6 +644,90 @@ h3 {
 .service p {
   color: var(--muted);
   font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.service-link {
+  margin-top: auto;
+  align-self: flex-start;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--sea-deep);
+  padding: 0.4rem 0;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.service-link:hover {
+  color: var(--coral-deep);
+  border-color: var(--coral);
+}
+
+.services-cta {
+  text-align: center;
+  margin-top: 2.4rem;
+}
+
+/* ---- Examples page header ---- */
+.page-hero {
+  position: relative;
+  z-index: 1;
+  color: var(--foam);
+  text-align: center;
+  padding: 5rem 0 3.5rem;
+}
+
+.page-hero h1 {
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 900;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+}
+
+.page-hero .sub {
+  font-size: clamp(1rem, 2vw, 1.18rem);
+  color: rgba(247, 251, 251, 0.85);
+  max-width: 52ch;
+  margin: 0 auto;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+}
+
+.page-hero .eyebrow {
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--teal-glow);
+  background: rgba(70, 197, 214, 0.12);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(70, 197, 214, 0.3);
+  margin-bottom: 1.2rem;
+}
+
+.back-link {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: rgba(247, 251, 251, 0.75);
+  margin-bottom: 1.4rem;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: var(--teal-glow);
+}
+
+.btn-ghost-dark {
+  background: transparent;
+  color: var(--sea-deep);
+  border: 2px solid rgba(13, 90, 107, 0.4);
+}
+
+.btn-ghost-dark:hover {
+  background: rgba(13, 90, 107, 0.08);
+  transform: translateY(-3px);
 }
 
 /* ---------- Contact ---------- */
