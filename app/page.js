@@ -57,13 +57,13 @@ export default function Home() {
         <div className="container">
           <span className="eyebrow">San Diego · Surfboard Ding Repair</span>
           <h1>
-            Cracked, dinged, or snapped?
+            Any ding fixed
             <br />
-            <span className="accent">Back in the water, fast.</span>
+            <span className="accent">fast, strong, and cheap.</span>
           </h1>
           <p className="sub">
-            Clean, strong, color-matched repairs for every kind of board — from
-            pressure dings to full snaps. Slide through the before &amp; afters.
+            Every kind of board, always strong and color matched — slide through
+            the before &amp; afters.
           </p>
           <div className="hero-ctas">
             <a href="#contact" className="btn btn-primary">
