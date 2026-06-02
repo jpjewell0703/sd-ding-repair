@@ -72,16 +72,12 @@ export default function Home() {
 
           <div className="stats">
             <div className="stat">
-              <div className="num">500+</div>
+              <div className="num">100+</div>
               <div className="label">Boards Fixed</div>
             </div>
             <div className="stat">
               <div className="num">48hr</div>
               <div className="label">Avg Turnaround</div>
-            </div>
-            <div className="stat">
-              <div className="num">100%</div>
-              <div className="label">Water-Ready</div>
             </div>
           </div>
         </div>
