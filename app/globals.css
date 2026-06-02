@@ -241,11 +241,11 @@ h3 {
   z-index: 1;
   background: radial-gradient(
       ellipse 80% 65% at 50% 42%,
-      rgba(7, 54, 66, 0.62) 0%,
-      rgba(7, 54, 66, 0.82) 55%,
-      rgba(6, 29, 35, 0.95) 100%
+      rgba(15, 30, 35, 0.58) 0%,
+      rgba(12, 24, 28, 0.8) 55%,
+      rgba(8, 16, 19, 0.94) 100%
     ),
-    linear-gradient(180deg, rgba(13, 90, 107, 0.5), rgba(6, 29, 35, 0.7));
+    linear-gradient(180deg, rgba(20, 40, 46, 0.32), rgba(8, 16, 19, 0.62));
 }
 
 .hero .container {
