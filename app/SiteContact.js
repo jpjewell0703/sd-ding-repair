@@ -1,12 +1,8 @@
-import WaveDivider from "./WaveDivider";
 import { PHONE, PHONE_HREF, EMAIL, IG } from "./contact-info";
 
 export default function SiteContact() {
   return (
     <section className="section contact" id="contact">
-      <div style={{ color: "#073642" }}>
-        <WaveDivider flip />
-      </div>
       <div className="section-pad">
         <div className="container">
           <div className="section-head">

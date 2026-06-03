@@ -61,23 +61,29 @@ export default function HeroMontage() {
     };
   }, []);
 
+  // close the lightbox on Escape
+  useEffect(() => {
+    if (openId === null) return;
+    const onKey = (e) => e.key === "Escape" && setOpenId(null);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [openId]);
+
+  const openItem = tiles.find((t) => t.id === openId);
+
   return (
     <div
       className={`hero-montage${openId !== null ? " has-open" : ""}`}
       ref={rootRef}
     >
       <div className="hero-dust" aria-hidden="true" />
-      <div
-        className={`hero-backdrop${openId !== null ? " show" : ""}`}
-        onClick={() => setOpenId(null)}
-      />
+
       {tiles.map((r, i) => {
         const s = SPOTS[i % SPOTS.length];
-        const open = openId === r.id;
         return (
           <div
             key={r.id}
-            className={`hero-parallax${open ? " is-open" : ""}`}
+            className="hero-parallax"
             style={{
               top: s.top,
               left: s.left,
@@ -90,10 +96,10 @@ export default function HeroMontage() {
           >
             <button
               type="button"
-              aria-label={open ? "Close enlarged photo" : "Enlarge photo"}
+              aria-label="Enlarge photo"
               className={`hero-card float-${s.float}`}
               style={{ animationDelay: `${i * -0.9}s` }}
-              onClick={() => setOpenId(open ? null : r.id)}
+              onClick={() => setOpenId(r.id)}
             >
               {r.before && (
                 <img className="hero-card-img" src={r.before} alt="" />
@@ -110,6 +116,21 @@ export default function HeroMontage() {
           </div>
         );
       })}
+
+      {/* Lightbox: a free-floating, always-centered blow-up of the tapped
+          board. Clicking anywhere (or Escape) closes it. */}
+      <div
+        className={`hero-lightbox${openItem ? " show" : ""}`}
+        onClick={() => setOpenId(null)}
+        aria-hidden={!openItem}
+      >
+        {openItem && (
+          <figure className="hero-lightbox-fig">
+            <img src={openItem.after || openItem.before} alt={openItem.title} />
+            <figcaption>{openItem.title}</figcaption>
+          </figure>
+        )}
+      </div>
     </div>
   );
 }

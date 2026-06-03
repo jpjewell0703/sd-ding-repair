@@ -4,7 +4,6 @@ import Reveal from "./Reveal";
 import SiteNav from "./SiteNav";
 import SiteContact from "./SiteContact";
 import SiteFooter from "./SiteFooter";
-import WaveDivider from "./WaveDivider";
 import { repairs } from "./gallery-data";
 import { categories } from "./services-data";
 
@@ -54,9 +53,6 @@ export default function Home() {
 
       {/* GALLERY */}
       <section className="section" id="gallery" style={{ color: "var(--foam)" }}>
-        <div style={{ color: "var(--foam)" }}>
-          <WaveDivider />
-        </div>
         <div className="section-pad">
           <div className="container">
             <div className="section-head">

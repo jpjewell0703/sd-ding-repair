@@ -4,7 +4,6 @@ import Reveal from "../../Reveal";
 import SiteNav from "../../SiteNav";
 import SiteContact from "../../SiteContact";
 import SiteFooter from "../../SiteFooter";
-import WaveDivider from "../../WaveDivider";
 import { categories, getCategory } from "../../services-data";
 import { getRepairsByCategory } from "../../gallery-data";
 
@@ -47,9 +46,6 @@ export default async function ExamplesPage({ params }) {
       </header>
 
       <section className="section" style={{ color: "var(--foam)" }}>
-        <div style={{ color: "var(--foam)" }}>
-          <WaveDivider />
-        </div>
         <div className="section-pad">
           <div className="container">
             {items.length > 0 ? (

@@ -9,7 +9,10 @@
   --coral: #ff7a59;
   --coral-deep: #e85d3a;
   --ink: #0a2a33;
-  --muted: #5c7780;
+  /* light muted for body copy on the dark space background */
+  --muted: #9db3ba;
+  /* the continuous "space" backdrop color the whole site floats on */
+  --space: #07242c;
 }
 
 * {
@@ -25,8 +28,8 @@ html {
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
-  color: var(--ink);
-  background: var(--foam);
+  color: var(--foam);
+  background: var(--space);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -54,7 +57,16 @@ h3 {
   position: fixed;
   inset: 0;
   z-index: -2;
-  background: linear-gradient(180deg, #0d5a6b 0%, #0a2a33 55%, #061d23 100%);
+  /* one continuous deep-space field the whole site floats on — soft radial
+     glows over a near-uniform dark base, so sections blend with no hard line */
+  background: radial-gradient(
+      120% 80% at 50% -10%,
+      #105464 0%,
+      transparent 55%
+    ),
+    radial-gradient(90% 70% at 85% 30%, rgba(70, 197, 214, 0.12) 0%, transparent 55%),
+    radial-gradient(80% 60% at 10% 75%, rgba(31, 138, 156, 0.14) 0%, transparent 55%),
+    linear-gradient(180deg, #0a2f3a 0%, #07242c 50%, #06202700 100%), var(--space);
 }
 
 .wave-bg::before,
@@ -252,44 +264,60 @@ h3 {
     0 0 0 2px rgba(70, 197, 214, 0.5);
 }
 
-/* dim backdrop shown while a card is enlarged; click to close */
-.hero-backdrop {
+/* Lightbox: full-screen, flex-centered overlay so the blow-up is ALWAYS
+   dead-center and never runs off screen, at any viewport size. Fades in. */
+.hero-lightbox {
   position: fixed;
   inset: 0;
-  z-index: 40;
-  background: rgba(4, 14, 18, 0.72);
-  backdrop-filter: blur(4px);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5vh 5vw;
+  background: rgba(6, 20, 26, 0.78);
+  backdrop-filter: blur(6px);
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.35s ease, visibility 0.35s ease;
+  pointer-events: none;
   cursor: zoom-out;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
-.hero-backdrop.show {
+.hero-lightbox.show {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
 
-/* an enlarged card: pop to the top layer, center on screen, ~5x bigger,
-   and freeze the idle float + mouse parallax so it sits still to view */
-.hero-parallax.is-open {
-  position: fixed;
-  z-index: 45;
-  top: 50%;
-  left: 50%;
-  right: auto;
-  bottom: auto;
-  /* literal 5x: scale the card up around its center, pinned to mid-screen */
-  transform: translate(-50%, -50%) scale(5) !important;
-  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+.hero-lightbox-fig {
+  margin: 0;
+  max-width: min(900px, 90vw);
+  transform: scale(0.92);
+  opacity: 0;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.45s ease;
 }
 
-.hero-parallax.is-open .hero-card {
-  animation: none;
-  cursor: zoom-out;
-  border-radius: 20px;
-  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.6);
+.hero-lightbox.show .hero-lightbox-fig {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.hero-lightbox-fig img {
+  display: block;
+  width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+  border-radius: 18px;
+  box-shadow: 0 40px 110px rgba(0, 0, 0, 0.6);
+}
+
+.hero-lightbox-fig figcaption {
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--foam);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
 }
 
 /* faint drifting "space dust" — pure depth cue, very subtle */
@@ -541,13 +569,15 @@ h3 {
 }
 
 /* ---------- Sections ---------- */
+/* transparent so the single space backdrop shows through every section —
+   no hard color blocks, everything fades into one continuous field */
 .section {
-  background: var(--foam);
+  background: transparent;
   position: relative;
 }
 
 .section.alt {
-  background: var(--sand);
+  background: transparent;
 }
 
 .section-pad {
@@ -564,14 +594,14 @@ h3 {
   letter-spacing: 0.2em;
   font-size: 0.74rem;
   font-weight: 800;
-  color: var(--sea);
+  color: var(--teal-glow);
 }
 
 .section-head h2 {
   font-size: clamp(1.9rem, 4vw, 2.8rem);
   font-weight: 900;
   margin: 0.6rem 0 0.5rem;
-  color: var(--ink);
+  color: var(--foam);
 }
 
 .section-head p {
@@ -595,17 +625,20 @@ h3 {
 }
 
 .card {
-  background: #fff;
+  /* floating glass panel on the dark space field */
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
   border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 12px 30px rgba(7, 54, 66, 0.1);
-  border: 1px solid rgba(7, 54, 66, 0.06);
-  transition: transform 0.25s, box-shadow 0.25s;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
 }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 22px 44px rgba(7, 54, 66, 0.18);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
+  border-color: rgba(70, 197, 214, 0.4);
 }
 
 .card-body {
@@ -615,6 +648,7 @@ h3 {
 .card-body h3 {
   font-size: 1.1rem;
   margin-bottom: 0.3rem;
+  color: var(--foam);
 }
 
 .card-body p {
@@ -628,8 +662,8 @@ h3 {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--sea-deep);
-  background: rgba(31, 138, 156, 0.12);
+  color: var(--teal-glow);
+  background: rgba(70, 197, 214, 0.14);
   padding: 0.25rem 0.6rem;
   border-radius: 999px;
   margin-bottom: 0.7rem;
@@ -737,17 +771,19 @@ h3 {
 }
 
 .service {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
   border-radius: 16px;
   padding: 1.6rem 1.4rem;
-  border: 1px solid rgba(7, 54, 66, 0.07);
-  box-shadow: 0 8px 22px rgba(7, 54, 66, 0.06);
-  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
 .service:hover {
   transform: translateY(-4px);
-  box-shadow: 0 14px 30px rgba(7, 54, 66, 0.12);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.5);
+  border-color: rgba(70, 197, 214, 0.4);
 }
 
 .service {
@@ -758,6 +794,7 @@ h3 {
 .service h3 {
   font-size: 1.05rem;
   margin-bottom: 0.35rem;
+  color: var(--foam);
 }
 
 .service p {
@@ -771,14 +808,14 @@ h3 {
   align-self: flex-start;
   font-weight: 700;
   font-size: 0.92rem;
-  color: var(--sea-deep);
+  color: var(--teal-glow);
   padding: 0.4rem 0;
   border-bottom: 2px solid transparent;
   transition: color 0.2s, border-color 0.2s, transform 0.2s;
 }
 
 .service-link:hover {
-  color: var(--coral-deep);
+  color: var(--coral);
   border-color: var(--coral);
 }
 
@@ -839,19 +876,19 @@ h3 {
 }
 
 .btn-ghost-dark {
-  background: transparent;
-  color: var(--sea-deep);
-  border: 2px solid rgba(13, 90, 107, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--foam);
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .btn-ghost-dark:hover {
-  background: rgba(13, 90, 107, 0.08);
+  background: rgba(255, 255, 255, 0.14);
   transform: translateY(-3px);
 }
 
 /* ---------- Contact ---------- */
 .contact {
-  background: linear-gradient(160deg, #0d5a6b, #073642);
+  background: transparent;
   color: var(--foam);
 }
 
@@ -915,7 +952,8 @@ h3 {
 
 /* ---------- Footer ---------- */
 .footer {
-  background: #061d23;
+  background: transparent;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   color: rgba(247, 251, 251, 0.6);
   text-align: center;
   padding: 2rem 0;
