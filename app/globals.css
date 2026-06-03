@@ -189,15 +189,130 @@ h3 {
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  /* NB: no `perspective`/`transform`/`filter` here — those would make this a
+     containing block for the enlarged card's position:fixed, clipping the
+     full-screen backdrop to the hero. The parallax only translates, so we
+     don't need a 3D perspective context anyway. */
+  /* mouse-parallax offsets, driven from JS (normalized -0.5..0.5) */
+  --mx: 0;
+  --my: 0;
 }
 
+/* while a card is enlarged, lift the whole montage above the hero text and
+   sticky nav so the blow-up + backdrop take over the screen cleanly */
+.hero-montage.has-open {
+  z-index: 60;
+}
+
+/* deep-space glow that pools behind the floating cards */
+.hero-montage::before {
+  content: "";
+  position: absolute;
+  inset: -10%;
+  background: radial-gradient(
+    ellipse 60% 55% at 50% 42%,
+    rgba(70, 197, 214, 0.1) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+/* outer layer: carries position + mouse parallax (deeper cards move more) */
+.hero-parallax {
+  position: absolute;
+  will-change: transform;
+  transform: translate3d(
+    calc(var(--mx) * var(--d, 0px) * 2),
+    calc(var(--my) * var(--d, 0px) * 2),
+    0
+  );
+  transition: transform 0.05s linear;
+}
+
+/* inner layer: the photo card itself, owns the idle float keyframes */
 .hero-card {
   position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: none;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
   border: 2px solid rgba(255, 255, 255, 0.14);
   will-change: transform;
+  cursor: zoom-in;
+  pointer-events: auto;
+  transition: box-shadow 0.3s ease;
+}
+
+.hero-card:hover {
+  box-shadow: 0 22px 52px rgba(0, 0, 0, 0.55),
+    0 0 0 2px rgba(70, 197, 214, 0.5);
+}
+
+/* dim backdrop shown while a card is enlarged; click to close */
+.hero-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(4, 14, 18, 0.72);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+  cursor: zoom-out;
+}
+
+.hero-backdrop.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* an enlarged card: pop to the top layer, center on screen, ~5x bigger,
+   and freeze the idle float + mouse parallax so it sits still to view */
+.hero-parallax.is-open {
+  position: fixed;
+  z-index: 45;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  /* literal 5x: scale the card up around its center, pinned to mid-screen */
+  transform: translate(-50%, -50%) scale(5) !important;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.hero-parallax.is-open .hero-card {
+  animation: none;
+  cursor: zoom-out;
+  border-radius: 20px;
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.6);
+}
+
+/* faint drifting "space dust" — pure depth cue, very subtle */
+.hero-dust {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: radial-gradient(
+      1.5px 1.5px at 20% 30%,
+      rgba(255, 255, 255, 0.5),
+      transparent
+    ),
+    radial-gradient(1.5px 1.5px at 70% 65%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1px 1px at 45% 80%, rgba(70, 197, 214, 0.6), transparent),
+    radial-gradient(1px 1px at 85% 20%, rgba(255, 255, 255, 0.45), transparent),
+    radial-gradient(1.5px 1.5px at 35% 15%, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(1px 1px at 60% 45%, rgba(70, 197, 214, 0.5), transparent);
+  transform: translate3d(
+    calc(var(--mx) * 8px),
+    calc(var(--my) * 8px),
+    0
+  );
 }
 
 .hero-card-img {
@@ -300,16 +415,16 @@ h3 {
 
 @media (max-width: 760px) {
   /* keep only the four corner cards, shrunk, so they frame the text
-     without crowding it */
-  .hero-card {
+     without crowding it. (.hero-dust is child 1, so cards are 2..10) */
+  .hero-parallax {
     width: 96px !important;
     height: 74px !important;
   }
-  .hero-card:nth-child(2),
-  .hero-card:nth-child(5),
-  .hero-card:nth-child(7),
-  .hero-card:nth-child(8),
-  .hero-card:nth-child(9) {
+  .hero-parallax:nth-child(3),
+  .hero-parallax:nth-child(6),
+  .hero-parallax:nth-child(8),
+  .hero-parallax:nth-child(9),
+  .hero-parallax:nth-child(10) {
     display: none;
   }
 }
@@ -321,6 +436,10 @@ h3 {
   }
   .hero-card-after {
     opacity: 1;
+  }
+  .hero-parallax,
+  .hero-dust {
+    transform: none;
   }
 }
 
