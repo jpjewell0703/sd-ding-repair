@@ -1115,47 +1115,47 @@ body.intro-lock {
   filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.55));
 }
 
-/* the Futures longboard fin box, down the board centerline */
-.futures-box {
+/* 2+1 fin setup: two toed-in rail boxes + one center box */
+.finbox {
   position: absolute;
-  left: 50%;
-  top: 6%;
-  transform: translateX(-50%);
-  width: 16%;
-  aspect-ratio: 90 / 360;
+  left: var(--x);
+  top: var(--y);
+  width: 12%;
+  aspect-ratio: 44 / 150;
+  transform: translate(-50%, -50%) rotate(var(--rot, 0deg));
+  z-index: 2;
 }
 
-.futures-svg {
+.finbox-svg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.6));
+  transition: filter 0.3s ease;
+}
+.finbox:hover .finbox-svg {
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 14px rgba(150, 194, 255, 0.7));
 }
 
-/* each contact = an insert seated in the channel */
-.fbox-insert {
+/* icon disc seated in the channel; counter-rotated so it stays upright */
+.fbox-disc {
   position: absolute;
   left: 50%;
-  top: var(--y);
-  transform: translate(-50%, -50%);
-  z-index: 2;
-}
-
-.fbox-disc {
+  top: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 4.2vw;
-  max-width: 38px;
-  min-width: 26px;
+  width: 58%;
   aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(circle at 50% 32%, #20242a, #0a0b0d);
   border: 1.5px solid rgba(150, 194, 255, 0.5);
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9),
     0 2px 5px rgba(0, 0, 0, 0.6);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transform: translate(-50%, -50%) rotate(calc(-1 * var(--rot, 0deg)));
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 .fbox-disc svg {
   width: 56%;
@@ -1164,15 +1164,14 @@ body.intro-lock {
   transition: color 0.3s ease, filter 0.3s ease;
 }
 
-/* fancy movement: the insert lights up + glow-pulses, detail pops to the side */
-.fbox-insert:hover .fbox-disc {
-  transform: scale(1.22);
+/* fancy movement: the box lights up + glow-pulses, detail pops up */
+.finbox:hover .fbox-disc {
   border-color: rgba(174, 203, 245, 0.95);
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9),
     0 0 20px rgba(150, 194, 255, 0.7);
   animation: discPulse 1.2s ease-in-out infinite;
 }
-.fbox-insert:hover .fbox-disc svg {
+.finbox:hover .fbox-disc svg {
   color: #fff;
   filter: drop-shadow(0 0 6px rgba(150, 194, 255, 0.9));
 }
@@ -1189,21 +1188,24 @@ body.intro-lock {
   }
 }
 
-/* the contact detail that slides out to the right on hover */
+/* the contact detail that pops up above the box on hover */
 .fbox-pop {
   position: absolute;
-  left: 100%;
-  top: 50%;
-  margin-left: 14px;
-  transform: translate(8px, -50%);
+  left: 50%;
+  bottom: 100%;
+  transform-origin: center bottom;
+  transform: translate(-50%, -2px) rotate(calc(-1 * var(--rot, 0deg)));
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.1rem;
   padding: 0.45rem 0.85rem;
   border-radius: 12px;
-  background: var(--coral);
-  color: var(--ink);
+  background: #eef4ff;
+  color: #0c1d3a;
   white-space: nowrap;
+  font-weight: 700;
+  font-size: 0.84rem;
   opacity: 0;
   pointer-events: none;
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5),
@@ -1215,26 +1217,25 @@ body.intro-lock {
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sea);
+  color: #3f6bb0;
 }
-.fbox-pop {
-  font-weight: 700;
-  font-size: 0.84rem;
-}
-.fbox-insert:hover .fbox-pop {
+.finbox:hover .fbox-pop {
   opacity: 1;
-  transform: translate(0, -50%);
+  transform: translate(-50%, -12px) rotate(calc(-1 * var(--rot, 0deg)));
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fbox-insert:hover .fbox-disc {
+  .finbox:hover .fbox-disc {
     animation: none;
   }
 }
 
 @media (max-width: 560px) {
-  .futures-box {
-    width: 22%;
+  .board-tail {
+    width: min(360px, 94vw);
+  }
+  .finbox {
+    width: 15%;
   }
   .fbox-pop {
     font-size: 0.74rem;
