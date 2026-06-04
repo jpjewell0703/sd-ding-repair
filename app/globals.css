@@ -730,9 +730,10 @@ h3 {
 }
 
 .card {
-  /* floating glass panel on the dark space field */
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
+  /* floating glass panel on the dark space field. (No backdrop-filter here —
+     blurring 9+ cards repaints on every scroll frame and makes scroll janky;
+     a translucent fill reads as glass on the dark field at no perf cost.) */
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 18px;
   overflow: hidden;
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
@@ -876,8 +877,7 @@ h3 {
 }
 
 .service {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 16px;
   padding: 1.6rem 1.4rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1090,7 +1090,6 @@ h3 {
   transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
     transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
     filter 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-  will-change: opacity, transform, filter;
 }
 
 .reveal.in {

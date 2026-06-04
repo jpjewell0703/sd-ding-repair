@@ -11,8 +11,9 @@ export default function SmoothScroll() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const lenis = new Lenis({
-      duration: 1.15,
-      easing: (t) => 1 - Math.pow(1 - t, 3), // easeOutCubic
+      // lerp = responsiveness (higher feels snappier, less floaty/laggy)
+      lerp: 0.12,
+      wheelMultiplier: 1.1,
       smoothWheel: true,
     });
 

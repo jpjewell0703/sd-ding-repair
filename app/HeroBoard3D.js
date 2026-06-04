@@ -2,6 +2,35 @@
 
 import { useEffect, useRef } from "react";
 
+// Split a (centered) geometry into two halves at y = 0 by sorting each triangle
+// into the nose or tail half by its centroid. Lets the board start "snapped"
+// and reassemble. Returns [noseGeo, tailGeo].
+function splitGeometry(THREE, src) {
+  const g = src.index ? src.toNonIndexed() : src;
+  const pos = g.attributes.position.array;
+  const nor = g.attributes.normal ? g.attributes.normal.array : null;
+  const noseP = [];
+  const noseN = [];
+  const tailP = [];
+  const tailN = [];
+  for (let i = 0; i < pos.length; i += 9) {
+    const cy = (pos[i + 1] + pos[i + 4] + pos[i + 7]) / 3;
+    const P = cy >= 0 ? noseP : tailP;
+    const N = cy >= 0 ? noseN : tailN;
+    for (let k = 0; k < 9; k++) {
+      P.push(pos[i + k]);
+      if (nor) N.push(nor[i + k]);
+    }
+  }
+  const make = (P, N) => {
+    const bg = new THREE.BufferGeometry();
+    bg.setAttribute("position", new THREE.Float32BufferAttribute(P, 3));
+    if (N.length) bg.setAttribute("normal", new THREE.Float32BufferAttribute(N, 3));
+    return bg;
+  };
+  return [make(noseP, noseN), make(tailP, tailN)];
+}
+
 // A real 3D surfboard floating in the hero — glossy resin, lit with the brand
 // teal + coral, slowly rotating with a gentle bob and reacting to the cursor.
 // three.js is imported dynamically so it's code-split off the initial bundle
@@ -78,15 +107,30 @@ export default function HeroBoard3D() {
         emissive: 0x0c2e35,
         emissiveIntensity: 0.3,
       });
-      const board = new THREE.Mesh(geo, mat);
+      // split into two halves so the board can start snapped and repair itself
+      const [noseGeo, tailGeo] = splitGeometry(THREE, geo);
+      geo.dispose();
+      const nose = new THREE.Mesh(noseGeo, mat);
+      const tail = new THREE.Mesh(tailGeo, mat);
 
-      // thin dark stringer down the centerline
-      const stringer = new THREE.Mesh(
-        new THREE.BoxGeometry(0.025, L * 1.93, 0.02),
-        new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.5 })
-      );
-      stringer.position.z = 0.2;
-      board.add(stringer);
+      // a stringer segment down each half's centerline
+      const stringerMat = new THREE.MeshStandardMaterial({
+        color: 0x1a1a1a,
+        roughness: 0.5,
+      });
+      const mkStringer = (cy) => {
+        const s = new THREE.Mesh(
+          new THREE.BoxGeometry(0.025, L * 0.95, 0.02),
+          stringerMat
+        );
+        s.position.set(0, cy, 0.2);
+        return s;
+      };
+      nose.add(mkStringer(L * 0.5));
+      tail.add(mkStringer(-L * 0.5));
+
+      const board = new THREE.Group();
+      board.add(nose, tail);
 
       const group = new THREE.Group();
       group.add(board);
@@ -119,14 +163,26 @@ export default function HeroBoard3D() {
       window.addEventListener("pointermove", onMove, { passive: true });
 
       const clock = new THREE.Clock();
+      const introDur = 2.4; // seconds for the two halves to knit together
       let frame = 0;
       const renderOnce = () => {
         const t = clock.getElapsedTime();
         cx += (tx - cx) * 0.05;
         cy += (ty - cy) * 0.05;
-        group.rotation.y = 0.5 + t * 0.22 + cx * 0.7;
-        group.rotation.x = -0.35 + Math.sin(t * 0.45) * 0.07 + cy * 0.4;
-        group.position.y = Math.sin(t * 0.7) * 0.14;
+
+        // intro: halves start apart (snapped) and ease into one whole board
+        const p = Math.min(t / introDur, 1);
+        const e = 1 - Math.pow(1 - p, 3); // easeOutCubic
+        const sep = 1 - e;
+        nose.position.set(sep * 0.22, sep * 1.35, sep * 0.5);
+        nose.rotation.set(sep * 0.22, 0, sep * 0.4);
+        tail.position.set(-sep * 0.22, -sep * 1.35, sep * 0.5);
+        tail.rotation.set(-sep * 0.22, 0, -sep * 0.4);
+
+        // the float/spin eases in as the board becomes whole
+        group.rotation.y = 0.5 + t * 0.22 * e + cx * 0.7;
+        group.rotation.x = -0.35 + Math.sin(t * 0.45) * 0.07 * e + cy * 0.4;
+        group.position.y = Math.sin(t * 0.7) * 0.14 * e;
         renderer.render(scene, camera);
       };
       const loop = () => {
@@ -169,10 +225,10 @@ export default function HeroBoard3D() {
         if (io) io.disconnect();
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("resize", onResize);
-        geo.dispose();
-        mat.dispose();
-        stringer.geometry.dispose();
-        stringer.material.dispose();
+        scene.traverse((o) => {
+          if (o.geometry) o.geometry.dispose();
+          if (o.material) o.material.dispose();
+        });
         pmrem.dispose();
         renderer.dispose();
         if (renderer.domElement.parentNode) {

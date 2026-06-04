@@ -1,5 +1,4 @@
 import BeforeAfter from "./BeforeAfter";
-import HeroMontage from "./HeroMontage";
 import HeroBoard3D from "./HeroBoard3D";
 import Reveal from "./Reveal";
 import SiteNav from "./SiteNav";
@@ -17,7 +16,6 @@ export default function Home() {
 
       {/* HERO */}
       <header className="hero" id="top">
-        <HeroMontage />
         <HeroBoard3D />
         <div className="hero-overlay" aria-hidden="true" />
         <div className="container">
@@ -96,7 +94,7 @@ export default function Home() {
               <span className="kicker">What I Fix</span>
               <h2>Every ding has a fix</h2>
               <p>
-                Poly or epoxy, soft-top or high-performance — if it surfs, it can
+                Poly and epoxy, soft-top and high-performance — if it surfs, it can
                 be saved. Tap a category to see real before &amp; afters.
               </p>
             </div>
