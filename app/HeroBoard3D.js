@@ -65,9 +65,9 @@ export default function HeroBoard3D() {
       shape.bezierCurveTo(-W, L * 0.25, -0.32, L * 0.6, 0, L);
 
       const geo = new THREE.ExtrudeGeometry(shape, {
-        depth: 0.12,
+        depth: 0.06,
         bevelEnabled: true,
-        bevelThickness: 0.16,
+        bevelThickness: 0.08,
         bevelSize: 0.13,
         bevelSegments: 10,
         steps: 1,
@@ -94,10 +94,10 @@ export default function HeroBoard3D() {
         transparent: true,
       });
       const stringer = new THREE.Mesh(
-        new THREE.BoxGeometry(0.025, L * 1.93, 0.02),
+        new THREE.BoxGeometry(0.025, L * 1.93, 0.01),
         stringerMat
       );
-      stringer.position.z = 0.2;
+      stringer.position.z = 0.1;
       boardMesh.add(stringer);
 
       // ---- particle cloud sampled from the board surface ----
