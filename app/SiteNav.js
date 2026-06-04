@@ -31,6 +31,7 @@ export default function SiteNav() {
           <div className="nav-links">
             <a href="/#gallery">Gallery</a>
             <a href="/#services">Services</a>
+            <a href="/#how-it-works">How It Works</a>
             <a href="/#contact" className="nav-cta">
               Get a Quote
             </a>

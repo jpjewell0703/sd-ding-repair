@@ -1032,6 +1032,58 @@ body.intro-lock {
   margin-top: 2.4rem;
 }
 
+/* ---- How it works steps ---- */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.3rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: step;
+}
+
+.step {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 1.6rem 1.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.step:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.5);
+  border-color: rgba(150, 194, 255, 0.4);
+}
+
+.step-num {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--ink, #07212f);
+  background: var(--teal-glow);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.step p {
+  margin: 0;
+  color: var(--foam);
+  font-size: 0.98rem;
+  line-height: 1.5;
+  align-self: center;
+}
+
 /* ---- Examples page header ---- */
 .page-hero {
   position: relative;

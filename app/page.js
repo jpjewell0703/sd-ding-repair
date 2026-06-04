@@ -7,6 +7,15 @@ import SiteFooter from "./SiteFooter";
 import { repairs } from "./gallery-data";
 import { categories } from "./services-data";
 
+const steps = [
+  "Send me a photo through any of the contact methods.",
+  "Get your quote.",
+  "Receive instructions and decide whether you want me to pick your board up, or if you'd rather drop your board off to me.",
+  "Have your board repaired in 3 days or less.",
+  "Pick up your board and pay after the repair.",
+  "Tell your friends!!!",
+];
+
 export default function Home() {
   return (
     <>
@@ -114,6 +123,39 @@ export default function Home() {
             <div className="services-cta">
               <a href="#gallery" className="btn btn-primary">
                 Everything else → full gallery
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section className="section" id="how-it-works" style={{ color: "var(--foam)" }}>
+        <div className="section-pad">
+          <div className="container">
+            <div className="section-head">
+              <span className="kicker">How It Works</span>
+              <h2>From ding to dialed in 6 easy steps</h2>
+              <p>
+                No guesswork. Here&apos;s exactly what happens from the moment you
+                reach out to the day you&apos;re back in the water.
+              </p>
+            </div>
+
+            <ol className="steps-grid">
+              {steps.map((s, i) => (
+                <Reveal key={i} delay={(i % 3) * 80}>
+                  <li className="step">
+                    <span className="step-num">{i + 1}</span>
+                    <p>{s}</p>
+                  </li>
+                </Reveal>
+              ))}
+            </ol>
+
+            <div className="services-cta">
+              <a href="#contact" className="btn btn-primary">
+                Send a Photo &amp; Get Your Quote
               </a>
             </div>
           </div>
