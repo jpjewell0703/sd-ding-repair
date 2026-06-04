@@ -1,0 +1,47 @@
+"use client";
+
+import { useEffect } from "react";
+import Lenis from "lenis";
+
+// Inertia smooth-scrolling (igloo-style glide). Also rewires in-page anchor
+// links so #contact / #gallery ease there instead of jumping. Disabled for
+// users who prefer reduced motion.
+export default function SmoothScroll() {
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const lenis = new Lenis({
+      duration: 1.15,
+      easing: (t) => 1 - Math.pow(1 - t, 3), // easeOutCubic
+      smoothWheel: true,
+    });
+
+    let raf = 0;
+    const loop = (time) => {
+      lenis.raf(time);
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+
+    const onAnchorClick = (e) => {
+      const a = e.target.closest('a[href*="#"]');
+      if (!a) return;
+      const url = new URL(a.href, window.location.href);
+      if (url.pathname !== window.location.pathname) return; // let cross-page nav happen
+      const target = document.getElementById(url.hash.slice(1));
+      if (!target) return;
+      e.preventDefault();
+      lenis.scrollTo(target, { offset: -80, duration: 1.3 });
+      history.pushState(null, "", url.hash);
+    };
+    document.addEventListener("click", onAnchorClick);
+
+    return () => {
+      document.removeEventListener("click", onAnchorClick);
+      cancelAnimationFrame(raf);
+      lenis.destroy();
+    };
+  }, []);
+
+  return null;
+}

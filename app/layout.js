@@ -1,4 +1,6 @@
 import "./globals.css";
+import SmoothScroll from "./SmoothScroll";
+import FancyFX from "./FancyFX";
 
 export const metadata = {
   title: "SD Ding Repair — Surfboard Ding & Damage Repair in San Diego",
@@ -14,7 +16,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SmoothScroll />
+        <div className="grain" aria-hidden="true" />
+        <FancyFX />
+        {children}
+      </body>
     </html>
   );
 }
