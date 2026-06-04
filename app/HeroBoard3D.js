@@ -76,13 +76,13 @@ export default function HeroBoard3D() {
 
       // solid glossy board
       const boardMat = new THREE.MeshPhysicalMaterial({
-        color: 0x1f2e34,
+        color: 0x14233f,
         roughness: 0.12,
         metalness: 0,
         clearcoat: 1,
         clearcoatRoughness: 0.1,
-        envMapIntensity: 0.7,
-        emissive: 0x0c2e35,
+        envMapIntensity: 0.8,
+        emissive: 0x0a1c3a,
         emissiveIntensity: 0.3,
         transparent: true,
       });
@@ -135,8 +135,8 @@ export default function HeroBoard3D() {
           uProgress: { value: 1 },
           uAlpha: { value: 1 },
           uSize: { value: 26 * pixelRatio },
-          uColorA: { value: new THREE.Color(0x7fd4e2) },
-          uColorB: { value: new THREE.Color(0xff7a59) },
+          uColorA: { value: new THREE.Color(0x9ec1f0) },
+          uColorB: { value: new THREE.Color(0xffffff) },
         },
         vertexShader: `
           uniform float uProgress;
@@ -176,14 +176,14 @@ export default function HeroBoard3D() {
       scene.add(group);
 
       // ---- lighting ----
-      scene.add(new THREE.AmbientLight(0xffffff, 0.18));
-      const teal = new THREE.DirectionalLight(0x46c5d6, 3.6);
-      teal.position.set(-5, 3, 4);
-      scene.add(teal);
-      const coral = new THREE.DirectionalLight(0xff7a59, 2.8);
-      coral.position.set(5, -2, 3);
-      scene.add(coral);
-      const key = new THREE.DirectionalLight(0xffffff, 0.5);
+      scene.add(new THREE.AmbientLight(0xffffff, 0.2));
+      const blue = new THREE.DirectionalLight(0x5b86d6, 3.4);
+      blue.position.set(-5, 3, 4);
+      scene.add(blue);
+      const white = new THREE.DirectionalLight(0xffffff, 2.4);
+      white.position.set(5, -2, 3);
+      scene.add(white);
+      const key = new THREE.DirectionalLight(0xdfe9ff, 0.6);
       key.position.set(0, 6, 3);
       scene.add(key);
 
