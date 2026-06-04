@@ -1102,7 +1102,7 @@ body.intro-lock {
 
 .board-tail {
   position: relative;
-  width: min(440px, 90vw);
+  width: min(540px, 92vw);
   margin: 3rem auto 0;
   aspect-ratio: 200 / 160;
 }
@@ -1120,7 +1120,7 @@ body.intro-lock {
   position: absolute;
   left: var(--x);
   top: var(--y);
-  width: 12%;
+  width: 6%;
   aspect-ratio: 44 / 150;
   transform: translate(-50%, -50%) rotate(var(--rot, 0deg));
   z-index: 2;
@@ -1147,7 +1147,7 @@ body.intro-lock {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 58%;
+  width: 76%;
   aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(circle at 50% 32%, #20242a, #0a0b0d);
@@ -1232,10 +1232,10 @@ body.intro-lock {
 
 @media (max-width: 560px) {
   .board-tail {
-    width: min(360px, 94vw);
+    width: min(400px, 96vw);
   }
   .finbox {
-    width: 15%;
+    width: 8%;
   }
   .fbox-pop {
     font-size: 0.74rem;
