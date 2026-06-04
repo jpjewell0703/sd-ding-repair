@@ -1102,9 +1102,9 @@ body.intro-lock {
 
 .board-tail {
   position: relative;
-  width: min(540px, 92vw);
+  width: min(460px, 90vw);
   margin: 3rem auto 0;
-  aspect-ratio: 200 / 320;
+  aspect-ratio: 200 / 150;
 }
 
 .board-tail-svg {
@@ -1112,66 +1112,93 @@ body.intro-lock {
   inset: 0;
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 34px 70px rgba(0, 0, 0, 0.55));
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.55));
 }
 
-/* each thruster fin = a contact link */
-.fin {
+/* each FCS II fin box = a contact link */
+.fcs-box {
   position: absolute;
   left: var(--x);
   top: var(--y);
-  width: 18%;
-  aspect-ratio: 96 / 150;
-  transform: translate(-50%, -100%);
-}
-
-.fin-shape {
-  display: block;
-  width: 100%;
-  height: 100%;
-  transform: rotate(var(--r));
-  transform-origin: 50% 100%;
-  transition: transform 0.4s ease, filter 0.4s ease;
-}
-.fin-shape svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
-}
-
-.fin-icon {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  width: 26%;
+  width: 8%;
   transform: translate(-50%, -50%);
-  color: #0c1d3a;
-  opacity: 0.85;
 }
 
-/* fancy movement: the fin sways like it's cutting water + glows */
-.fin:hover .fin-shape {
-  filter: drop-shadow(0 8px 20px rgba(150, 194, 255, 0.7));
-  animation: finSway 1.15s ease-in-out infinite;
+/* the routed slot: a sleek capsule recessed into the board, icy-blue rim */
+.fcs-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  aspect-ratio: 1 / 3;
+  padding: 14% 0;
+  transform: rotate(var(--r));
+  border-radius: 999px;
+  background: linear-gradient(180deg, #0a1830 0%, #060f22 100%);
+  border: 1.5px solid rgba(150, 194, 255, 0.55);
+  box-shadow: inset 0 3px 7px rgba(0, 0, 0, 0.8),
+    inset 0 -1px 2px rgba(150, 194, 255, 0.25),
+    0 1px 0 rgba(255, 255, 255, 0.12);
+  transition: box-shadow 0.35s ease, border-color 0.35s ease,
+    transform 0.35s ease;
 }
 
-@keyframes finSway {
+/* two cavities — front (with the logo) larger than the back, FCS II style */
+.fcs-cav {
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 35%, #14233f, #060d1c);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fcs-cav-front {
+  width: 76%;
+  aspect-ratio: 1;
+}
+.fcs-cav-back {
+  width: 50%;
+  aspect-ratio: 1;
+}
+.fcs-cav-front svg {
+  width: 62%;
+  height: 62%;
+  color: var(--teal-glow);
+  transition: color 0.35s ease, filter 0.35s ease;
+}
+
+/* fancy movement: the box lights up, lifts, and its rim/logo glow pulses */
+.fcs-box:hover .fcs-slot {
+  transform: rotate(var(--r)) scale(1.08) translateY(-4px);
+  border-color: rgba(174, 203, 245, 0.95);
+  box-shadow: inset 0 3px 7px rgba(0, 0, 0, 0.8),
+    0 0 22px rgba(150, 194, 255, 0.6), 0 0 0 1px rgba(150, 194, 255, 0.5);
+  animation: fcsPulse 1.2s ease-in-out infinite;
+}
+.fcs-box:hover .fcs-cav-front svg {
+  color: #fff;
+  filter: drop-shadow(0 0 6px rgba(150, 194, 255, 0.9));
+}
+
+@keyframes fcsPulse {
   0%,
   100% {
-    transform: rotate(calc(var(--r) - 8deg)) translateY(-6px);
+    box-shadow: inset 0 3px 7px rgba(0, 0, 0, 0.8),
+      0 0 16px rgba(150, 194, 255, 0.45), 0 0 0 1px rgba(150, 194, 255, 0.45);
   }
   50% {
-    transform: rotate(calc(var(--r) + 8deg)) translateY(-6px);
+    box-shadow: inset 0 3px 7px rgba(0, 0, 0, 0.8),
+      0 0 28px rgba(150, 194, 255, 0.8), 0 0 0 1px rgba(174, 203, 245, 0.7);
   }
 }
 
-/* always-on short label sitting on the board at the fin base */
-.fin-tip {
+/* always-on short label below the box */
+.fcs-tip {
   position: absolute;
   top: 100%;
   left: 50%;
-  transform: translate(-50%, 10px);
+  transform: translate(-50%, 12px);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -1180,16 +1207,16 @@ body.intro-lock {
   white-space: nowrap;
   transition: color 0.3s ease;
 }
-.fin:hover .fin-tip {
+.fcs-box:hover .fcs-tip {
   color: var(--foam);
 }
 
-/* the detail that pops above the fin on hover */
-.fin-pop {
+/* the detail that pops above the box on hover */
+.fcs-pop {
   position: absolute;
   bottom: 100%;
   left: 50%;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   transform: translate(-50%, 12px);
   padding: 0.42rem 0.8rem;
   border-radius: 999px;
@@ -1200,26 +1227,30 @@ body.intro-lock {
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
+  z-index: 2;
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45),
     0 0 0 1px rgba(150, 194, 255, 0.3);
   transition: opacity 0.35s ease, transform 0.35s ease;
 }
-.fin:hover .fin-pop {
+.fcs-box:hover .fcs-pop {
   opacity: 1;
   transform: translate(-50%, 0);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fin:hover .fin-shape {
+  .fcs-box:hover .fcs-slot {
     animation: none;
   }
 }
 
 @media (max-width: 560px) {
-  .fin-tip {
-    font-size: 0.62rem;
+  .fcs-box {
+    width: 11%;
   }
-  .fin-pop {
+  .fcs-tip {
+    font-size: 0.6rem;
+  }
+  .fcs-pop {
     font-size: 0.72rem;
   }
 }
