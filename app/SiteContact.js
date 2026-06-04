@@ -9,9 +9,9 @@ const BOXES = [
     label: "Email",
     value: EMAIL,
     href: `mailto:${EMAIL}`,
-    x: "39%",
-    y: "47%",
-    rot: "8deg",
+    x: "27%",
+    y: "33%",
+    rot: "-7deg",
     icon: (
       <>
         <rect x="3" y="5" width="18" height="14" rx="2.5" />
@@ -25,9 +25,9 @@ const BOXES = [
     value: IG[0].handle,
     href: IG[0].url,
     external: true,
-    x: "61%",
-    y: "47%",
-    rot: "-8deg",
+    x: "73%",
+    y: "33%",
+    rot: "7deg",
     icon: (
       <>
         <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -42,7 +42,7 @@ const BOXES = [
     value: PHONE,
     href: PHONE_HREF,
     x: "50%",
-    y: "67%",
+    y: "65%",
     rot: "0deg",
     icon: (
       <path d="M5 3h3l2 5-2.5 1.5a11 11 0 0 0 5 5L17 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z" />
