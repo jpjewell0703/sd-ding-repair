@@ -719,20 +719,22 @@ body.intro-lock {
   flex-wrap: wrap;
 }
 
+/* primary CTA stacks its label over a small caption, both inside the pill */
 .cta-stack {
-  display: inline-flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.3rem;
+  gap: 0.05rem;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  line-height: 1.1;
 }
 
-/* half the button's font-size, light gray */
+/* half the button's font-size, light gray, sitting on the white pill */
 .cta-sub {
   font-size: 0.5rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: lowercase;
-  color: #c2cad6;
+  color: #9aa1ad;
 }
 
 .btn {
