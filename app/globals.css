@@ -286,11 +286,26 @@ h3 {
 }
 
 /* ---- Hero floating before/after cards ---- */
+/* the floating 3D surfboard canvas, between the photo montage and the text */
+.hero-board3d {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.hero-board3d canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
 .hero-montage {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  /* recede behind the 3D board centerpiece */
+  opacity: 0.62;
   /* NB: no `perspective`/`transform`/`filter` here — those would make this a
      containing block for the enlarged card's position:fixed, clipping the
      full-screen backdrop to the hero. The parallax only translates, so we
@@ -513,8 +528,8 @@ h3 {
   pointer-events: none;
   background: radial-gradient(
     ellipse 52% 50% at 50% 46%,
-    rgba(6, 18, 22, 0.72) 0%,
-    rgba(6, 18, 22, 0.45) 45%,
+    rgba(6, 18, 22, 0.5) 0%,
+    rgba(6, 18, 22, 0.28) 45%,
     transparent 72%
   );
 }

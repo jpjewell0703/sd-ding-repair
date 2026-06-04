@@ -1,5 +1,6 @@
 import BeforeAfter from "./BeforeAfter";
 import HeroMontage from "./HeroMontage";
+import HeroBoard3D from "./HeroBoard3D";
 import Reveal from "./Reveal";
 import SiteNav from "./SiteNav";
 import SiteContact from "./SiteContact";
@@ -17,6 +18,7 @@ export default function Home() {
       {/* HERO */}
       <header className="hero" id="top">
         <HeroMontage />
+        <HeroBoard3D />
         <div className="hero-overlay" aria-hidden="true" />
         <div className="container">
           <span className="eyebrow">San Diego · Surfboard Ding Repair</span>
