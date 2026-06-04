@@ -66,6 +66,102 @@ h3 {
   margin-inline: auto;
 }
 
+/* ---------- Intro loader ---------- */
+body.intro-lock {
+  overflow: hidden;
+}
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--space);
+  transition: opacity 0.8s ease, transform 0.85s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* subtle space glow behind the loader content */
+.intro::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 50% 45% at 50% 50%,
+    rgba(70, 197, 214, 0.12) 0%,
+    transparent 70%
+  );
+}
+
+.intro-exit {
+  opacity: 0;
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
+.intro-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.intro-logo {
+  filter: drop-shadow(0 6px 22px rgba(70, 197, 214, 0.45));
+  animation: introPulse 1.7s ease-in-out infinite;
+}
+
+.intro-count {
+  font-size: clamp(3.2rem, 11vw, 6.5rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--foam);
+  font-variant-numeric: tabular-nums;
+}
+
+.intro-count span {
+  font-size: 0.32em;
+  font-weight: 800;
+  color: var(--teal-glow);
+  margin-left: 0.15em;
+  vertical-align: 0.9em;
+}
+
+.intro-bar {
+  width: min(220px, 56vw);
+  height: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.intro-bar span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--teal-glow), var(--coral));
+  transition: width 0.1s linear;
+}
+
+@keyframes introPulse {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-logo {
+    animation: none;
+  }
+}
+
 /* ---------- Cursor glow (follows the pointer, lights the space) ---------- */
 .cursor-glow {
   position: fixed;
