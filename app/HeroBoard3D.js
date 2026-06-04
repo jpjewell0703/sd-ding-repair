@@ -136,7 +136,7 @@ export default function HeroBoard3D() {
           uAlpha: { value: 1 },
           uSize: { value: 26 * pixelRatio },
           uColorA: { value: new THREE.Color(0x9ec1f0) },
-          uColorB: { value: new THREE.Color(0xffffff) },
+          uColorB: { value: new THREE.Color(0xbfe3ff) },
         },
         vertexShader: `
           uniform float uProgress;

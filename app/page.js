@@ -1,4 +1,4 @@
-import BeforeAfter from "./BeforeAfter";
+import GalleryGrid from "./GalleryGrid";
 import HeroBoard3D from "./HeroBoard3D";
 import Reveal from "./Reveal";
 import SiteNav from "./SiteNav";
@@ -39,9 +39,12 @@ export default function Home() {
             the before &amp; afters.
           </p>
           <div className="hero-ctas">
-            <a href="#contact" className="btn btn-primary">
-              Get a Free Quote
-            </a>
+            <span className="cta-stack">
+              <a href="#contact" className="btn btn-primary">
+                Get a Free Quote
+              </a>
+              <span className="cta-sub">contact</span>
+            </span>
             <a href="#gallery" className="btn btn-ghost">
               See the Work
             </a>
@@ -73,24 +76,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="gallery-grid">
-              {repairs.map((r, i) => (
-                <Reveal key={r.id} delay={(i % 3) * 90}>
-                  <article className="card">
-                    <BeforeAfter
-                      before={r.before}
-                      after={r.after}
-                      title={r.title}
-                    />
-                    <div className="card-body">
-                      <span className="tag">{r.tag}</span>
-                      <h3>{r.title}</h3>
-                      <p>{r.desc}</p>
-                    </div>
-                  </article>
-                </Reveal>
-              ))}
-            </div>
+            <GalleryGrid repairs={repairs} />
           </div>
         </div>
       </section>

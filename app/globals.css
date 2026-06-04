@@ -715,7 +715,24 @@ body.intro-lock {
   display: flex;
   gap: 0.9rem;
   justify-content: center;
+  align-items: flex-start;
   flex-wrap: wrap;
+}
+
+.cta-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* half the button's font-size, light gray */
+.cta-sub {
+  font-size: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  color: #c2cad6;
 }
 
 .btn {
@@ -830,6 +847,11 @@ body.intro-lock {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.6rem;
+}
+
+.gallery-more {
+  text-align: center;
+  margin-top: 1.6rem;
 }
 
 .card {
