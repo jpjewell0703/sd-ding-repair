@@ -1094,68 +1094,134 @@ body.intro-lock {
   transform: translateY(-3px);
 }
 
-/* ---------- Contact ---------- */
-.contact {
+/* ---------- Contact: upside-down surfboard tail with fin-box links ------- */
+.finbox-contact {
   background: transparent;
   color: var(--foam);
 }
 
-.contact-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.2rem;
-  margin-top: 2.4rem;
+.board-tail {
+  position: relative;
+  width: min(540px, 92vw);
+  margin: 3rem auto 0;
+  aspect-ratio: 200 / 320;
 }
 
-.contact-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 16px;
-  padding: 1.3rem 1.4rem;
-  transition: transform 0.2s, background 0.2s, border-color 0.2s;
+.board-tail-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 34px 70px rgba(0, 0, 0, 0.55));
 }
 
-.contact-card:hover {
-  transform: translateY(-4px);
-  background: rgba(255, 255, 255, 0.12);
-  border-color: var(--teal-glow);
+/* each thruster fin = a contact link */
+.fin {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 18%;
+  aspect-ratio: 96 / 150;
+  transform: translate(-50%, -100%);
 }
 
-.contact-card .ic {
-  font-size: 1.7rem;
-  width: 52px;
-  height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  background: rgba(150, 194, 255, 0.16);
-  flex-shrink: 0;
-}
-
-.contact-card > span:last-child {
-  min-width: 0;
-}
-
-.contact-card .value {
+.fin-shape {
   display: block;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  width: 100%;
+  height: 100%;
+  transform: rotate(var(--r));
+  transform-origin: 50% 100%;
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+.fin-shape svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
 }
 
-.contact-card .label {
+.fin-icon {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  width: 26%;
+  transform: translate(-50%, -50%);
+  color: #0c1d3a;
+  opacity: 0.85;
+}
+
+/* fancy movement: the fin sways like it's cutting water + glows */
+.fin:hover .fin-shape {
+  filter: drop-shadow(0 8px 20px rgba(150, 194, 255, 0.7));
+  animation: finSway 1.15s ease-in-out infinite;
+}
+
+@keyframes finSway {
+  0%,
+  100% {
+    transform: rotate(calc(var(--r) - 8deg)) translateY(-6px);
+  }
+  50% {
+    transform: rotate(calc(var(--r) + 8deg)) translateY(-6px);
+  }
+}
+
+/* always-on short label sitting on the board at the fin base */
+.fin-tip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, 10px);
   font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: rgba(247, 251, 251, 0.6);
+  color: var(--teal-glow);
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+.fin:hover .fin-tip {
+  color: var(--foam);
 }
 
-.contact-card .value {
+/* the detail that pops above the fin on hover */
+.fin-pop {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-bottom: 8px;
+  transform: translate(-50%, 12px);
+  padding: 0.42rem 0.8rem;
+  border-radius: 999px;
+  background: var(--coral);
+  color: var(--ink);
   font-weight: 700;
-  font-size: 1.02rem;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(150, 194, 255, 0.3);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.fin:hover .fin-pop {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fin:hover .fin-shape {
+    animation: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .fin-tip {
+    font-size: 0.62rem;
+  }
+  .fin-pop {
+    font-size: 0.72rem;
+  }
 }
 
 /* ---------- Footer ---------- */
