@@ -2,40 +2,14 @@
 
 import { useEffect, useRef } from "react";
 
-// Split a (centered) geometry into two halves at y = 0 by sorting each triangle
-// into the nose or tail half by its centroid. Lets the board start "snapped"
-// and reassemble. Returns [noseGeo, tailGeo].
-function splitGeometry(THREE, src) {
-  const g = src.index ? src.toNonIndexed() : src;
-  const pos = g.attributes.position.array;
-  const nor = g.attributes.normal ? g.attributes.normal.array : null;
-  const noseP = [];
-  const noseN = [];
-  const tailP = [];
-  const tailN = [];
-  for (let i = 0; i < pos.length; i += 9) {
-    const cy = (pos[i + 1] + pos[i + 4] + pos[i + 7]) / 3;
-    const P = cy >= 0 ? noseP : tailP;
-    const N = cy >= 0 ? noseN : tailN;
-    for (let k = 0; k < 9; k++) {
-      P.push(pos[i + k]);
-      if (nor) N.push(nor[i + k]);
-    }
-  }
-  const make = (P, N) => {
-    const bg = new THREE.BufferGeometry();
-    bg.setAttribute("position", new THREE.Float32BufferAttribute(P, 3));
-    if (N.length) bg.setAttribute("normal", new THREE.Float32BufferAttribute(N, 3));
-    return bg;
-  };
-  return [make(noseP, noseN), make(tailP, tailN)];
-}
-
-// A real 3D surfboard floating in the hero — glossy resin, lit with the brand
-// teal + coral, slowly rotating with a gentle bob and reacting to the cursor.
-// three.js is imported dynamically so it's code-split off the initial bundle
-// and never runs on the server. Falls back to static (no canvas work) for
-// reduced-motion users.
+// A 3D surfboard floating in the hero. Normally it's a glossy solid board, but
+// it's also a cloud of ~60k particles sampled from its surface:
+//  • on page load it materializes from scattered pixels into the solid board
+//  • hovering the board shatters it into pixels
+//  • moving the cursor away lets it slowly reform
+// A single `progress` value (0 = solid board, 1 = fully shattered) crossfades
+// the solid mesh against the particle cloud. three.js is dynamically imported
+// (code-split, client-only); reduced-motion users get a static solid board.
 export default function HeroBoard3D() {
   const mountRef = useRef(null);
 
@@ -47,6 +21,9 @@ export default function HeroBoard3D() {
       const THREE = await import("three");
       const { RoomEnvironment } = await import(
         "three/examples/jsm/environments/RoomEnvironment.js"
+      );
+      const { MeshSurfaceSampler } = await import(
+        "three/examples/jsm/math/MeshSurfaceSampler.js"
       );
       const mount = mountRef.current;
       if (disposed || !mount) return;
@@ -64,7 +41,8 @@ export default function HeroBoard3D() {
         powerPreference: "high-performance",
       });
       renderer.setSize(w, h);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      renderer.setPixelRatio(pixelRatio);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.15;
       mount.appendChild(renderer.domElement);
@@ -73,13 +51,12 @@ export default function HeroBoard3D() {
       const camera = new THREE.PerspectiveCamera(34, w / h, 0.1, 100);
       camera.position.set(0, 0, 10);
 
-      // studio reflections for the glossy cl+ coat
       const pmrem = new THREE.PMREMGenerator(renderer);
       scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
       // ---- surfboard outline (pointed nose, rounded pin tail) ----
-      const L = 3.0; // half length
-      const W = 0.6; // half width
+      const L = 3.0;
+      const W = 0.6;
       const shape = new THREE.Shape();
       shape.moveTo(0, L);
       shape.bezierCurveTo(0.32, L * 0.6, W, L * 0.25, W, -L * 0.15);
@@ -97,7 +74,8 @@ export default function HeroBoard3D() {
       });
       geo.center();
 
-      const mat = new THREE.MeshPhysicalMaterial({
+      // solid glossy board
+      const boardMat = new THREE.MeshPhysicalMaterial({
         color: 0x1f2e34,
         roughness: 0.12,
         metalness: 0,
@@ -106,40 +84,98 @@ export default function HeroBoard3D() {
         envMapIntensity: 0.7,
         emissive: 0x0c2e35,
         emissiveIntensity: 0.3,
+        transparent: true,
       });
-      // split into two halves so the board can start snapped and repair itself
-      const [noseGeo, tailGeo] = splitGeometry(THREE, geo);
-      geo.dispose();
-      const nose = new THREE.Mesh(noseGeo, mat);
-      const tail = new THREE.Mesh(tailGeo, mat);
+      const boardMesh = new THREE.Mesh(geo, boardMat);
 
-      // a stringer segment down each half's centerline
       const stringerMat = new THREE.MeshStandardMaterial({
         color: 0x1a1a1a,
         roughness: 0.5,
+        transparent: true,
       });
-      const mkStringer = (cy) => {
-        const s = new THREE.Mesh(
-          new THREE.BoxGeometry(0.025, L * 0.95, 0.02),
-          stringerMat
-        );
-        s.position.set(0, cy, 0.2);
-        return s;
-      };
-      nose.add(mkStringer(L * 0.5));
-      tail.add(mkStringer(-L * 0.5));
+      const stringer = new THREE.Mesh(
+        new THREE.BoxGeometry(0.025, L * 1.93, 0.02),
+        stringerMat
+      );
+      stringer.position.z = 0.2;
+      boardMesh.add(stringer);
 
-      const board = new THREE.Group();
-      board.add(nose, tail);
+      // ---- particle cloud sampled from the board surface ----
+      const COUNT = 60000;
+      const sampler = new MeshSurfaceSampler(boardMesh).build();
+      const home = new Float32Array(COUNT * 3);
+      const scatter = new Float32Array(COUNT * 3);
+      const rand = new Float32Array(COUNT);
+      const tmp = new THREE.Vector3();
+      for (let i = 0; i < COUNT; i++) {
+        sampler.sample(tmp);
+        home[i * 3] = tmp.x;
+        home[i * 3 + 1] = tmp.y;
+        home[i * 3 + 2] = tmp.z;
+        // random point on a sphere, pushed out to a random distance
+        const u = Math.random() * 2 - 1;
+        const th = Math.random() * Math.PI * 2;
+        const s = Math.sqrt(1 - u * u);
+        const dist = 2 + Math.random() * 5;
+        scatter[i * 3] = s * Math.cos(th) * dist;
+        scatter[i * 3 + 1] = s * Math.sin(th) * dist * 1.4;
+        scatter[i * 3 + 2] = u * dist;
+        rand[i] = Math.random();
+      }
+      const pGeo = new THREE.BufferGeometry();
+      pGeo.setAttribute("position", new THREE.BufferAttribute(home, 3));
+      pGeo.setAttribute("aScatter", new THREE.BufferAttribute(scatter, 3));
+      pGeo.setAttribute("aRand", new THREE.BufferAttribute(rand, 1));
+
+      const pMat = new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        uniforms: {
+          uProgress: { value: 1 },
+          uAlpha: { value: 1 },
+          uSize: { value: 26 * pixelRatio },
+          uColorA: { value: new THREE.Color(0x7fd4e2) },
+          uColorB: { value: new THREE.Color(0xff7a59) },
+        },
+        vertexShader: `
+          uniform float uProgress;
+          uniform float uSize;
+          attribute vec3 aScatter;
+          attribute float aRand;
+          varying float vMix;
+          void main() {
+            // stagger each particle so they don't all move in lockstep
+            float p = clamp(uProgress * (0.55 + aRand) * 1.7 - aRand * 0.4, 0.0, 1.0);
+            vMix = p;
+            vec3 pos = mix(position, position + aScatter, p);
+            vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+            gl_Position = projectionMatrix * mv;
+            gl_PointSize = uSize / -mv.z;
+          }
+        `,
+        fragmentShader: `
+          uniform vec3 uColorA;
+          uniform vec3 uColorB;
+          uniform float uAlpha;
+          varying float vMix;
+          void main() {
+            vec2 c = gl_PointCoord - 0.5;
+            if (dot(c, c) > 0.25) discard;        // round pixel
+            vec3 col = mix(uColorA, uColorB, vMix); // hotter as it shatters
+            gl_FragColor = vec4(col, uAlpha);
+          }
+        `,
+      });
+      const points = new THREE.Points(pGeo, pMat);
 
       const group = new THREE.Group();
-      group.add(board);
+      group.add(boardMesh, points);
       group.rotation.set(-0.35, 0.5, 0.82);
       group.scale.setScalar(1.06);
       scene.add(group);
 
-      // ---- lighting: bold brand-colored rim lights so the dark board glows
-      // teal on one rail, coral on the other — the "lit in space" look ----
+      // ---- lighting ----
       scene.add(new THREE.AmbientLight(0xffffff, 0.18));
       const teal = new THREE.DirectionalLight(0x46c5d6, 3.6);
       teal.position.set(-5, 3, 4);
@@ -151,57 +187,74 @@ export default function HeroBoard3D() {
       key.position.set(0, 6, 3);
       scene.add(key);
 
-      // ---- interaction + animation ----
+      // ---- interaction ----
       let tx = 0;
       let ty = 0;
       let cx = 0;
       let cy = 0;
+      const pointer = new THREE.Vector2(2, 2); // start off-canvas (no hover)
+      const raycaster = new THREE.Raycaster();
       const onMove = (e) => {
+        const rect = renderer.domElement.getBoundingClientRect();
+        pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
         tx = e.clientX / window.innerWidth - 0.5;
         ty = e.clientY / window.innerHeight - 0.5;
       };
       window.addEventListener("pointermove", onMove, { passive: true });
 
+      // progress: 0 = solid board, 1 = fully shattered. Starts shattered so the
+      // page-load animation reforms it. Shatter is fast, reform is slow.
+      let progress = 1;
       const clock = new THREE.Clock();
-      const introDur = 2.4; // seconds for the two halves to knit together
       let frame = 0;
+
       const renderOnce = () => {
         const t = clock.getElapsedTime();
         cx += (tx - cx) * 0.05;
         cy += (ty - cy) * 0.05;
+        group.rotation.y = 0.5 + t * 0.18 + cx * 0.7;
+        group.rotation.x = -0.35 + Math.sin(t * 0.4) * 0.06 + cy * 0.4;
+        group.position.y = Math.sin(t * 0.7) * 0.12;
+        group.updateMatrixWorld();
 
-        // intro: halves start apart (snapped) and ease into one whole board
-        const p = Math.min(t / introDur, 1);
-        const e = 1 - Math.pow(1 - p, 3); // easeOutCubic
-        const sep = 1 - e;
-        nose.position.set(sep * 0.22, sep * 1.35, sep * 0.5);
-        nose.rotation.set(sep * 0.22, 0, sep * 0.4);
-        tail.position.set(-sep * 0.22, -sep * 1.35, sep * 0.5);
-        tail.rotation.set(-sep * 0.22, 0, -sep * 0.4);
+        // hover test against the (possibly invisible) solid board
+        raycaster.setFromCamera(pointer, camera);
+        const hovered = raycaster.intersectObject(boardMesh, false).length > 0;
+        const target = hovered ? 1 : 0;
+        const rate = target > progress ? 0.16 : 0.02; // shatter fast, reform slow
+        progress += (target - progress) * rate;
+        if (progress < 0.0005) progress = 0;
 
-        // the float/spin eases in as the board becomes whole
-        group.rotation.y = 0.5 + t * 0.22 * e + cx * 0.7;
-        group.rotation.x = -0.35 + Math.sin(t * 0.45) * 0.07 * e + cy * 0.4;
-        group.position.y = Math.sin(t * 0.7) * 0.14 * e;
+        pMat.uniforms.uProgress.value = progress;
+        pMat.uniforms.uAlpha.value = Math.min(progress * 1.4, 1);
+        const solid = 1 - Math.min(progress * 1.3, 1);
+        boardMat.opacity = solid;
+        stringerMat.opacity = solid;
+        boardMesh.visible = solid > 0.001;
+        points.visible = progress > 0.001; // skip 60k points when fully solid
+
         renderer.render(scene, camera);
       };
+
       const loop = () => {
         frame = requestAnimationFrame(loop);
         renderOnce();
       };
 
-      // pause the WebGL loop while the hero is scrolled out of view
       let io = null;
       if (reduced) {
-        group.rotation.y = 0.5;
+        progress = 0;
+        boardMat.opacity = 1;
+        stringerMat.opacity = 1;
+        pMat.uniforms.uAlpha.value = 0;
         renderer.render(scene, camera);
       } else {
         loop();
         io = new IntersectionObserver(
           ([e]) => {
-            if (e.isIntersecting && !frame) {
-              loop();
-            } else if (!e.isIntersecting && frame) {
+            if (e.isIntersecting && !frame) loop();
+            else if (!e.isIntersecting && frame) {
               cancelAnimationFrame(frame);
               frame = 0;
             }
@@ -229,6 +282,8 @@ export default function HeroBoard3D() {
           if (o.geometry) o.geometry.dispose();
           if (o.material) o.material.dispose();
         });
+        pGeo.dispose();
+        pMat.dispose();
         pmrem.dispose();
         renderer.dispose();
         if (renderer.domElement.parentNode) {
