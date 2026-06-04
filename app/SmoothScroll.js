@@ -8,6 +8,14 @@ import Lenis from "lenis";
 // users who prefer reduced motion.
 export default function SmoothScroll() {
   useEffect(() => {
+    // Always start at the top on (re)load — stop the browser from restoring a
+    // stale scroll position, which (with the late-loading 3D canvas shifting
+    // layout) left refreshes scrolled partway down instead of on the hero.
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
+
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const lenis = new Lenis({
@@ -16,6 +24,7 @@ export default function SmoothScroll() {
       wheelMultiplier: 1.1,
       smoothWheel: true,
     });
+    lenis.scrollTo(0, { immediate: true });
 
     let raf = 0;
     const loop = (time) => {
