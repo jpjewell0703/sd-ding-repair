@@ -39,9 +39,8 @@ export default function Home() {
             the before &amp; afters.
           </p>
           <div className="hero-ctas">
-            <a href="#contact" className="btn btn-primary cta-stack">
-              <span>Get a Free Quote</span>
-              <span className="cta-sub">contact</span>
+            <a href="#contact" className="btn btn-primary">
+              Contact
             </a>
             <a href="#gallery" className="btn btn-ghost">
               See the Work
