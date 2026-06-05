@@ -719,13 +719,16 @@ body.intro-lock {
   flex-wrap: wrap;
 }
 
-/* primary CTA stacks its label over a small caption, both inside the pill */
-.cta-stack {
+/* primary CTA stacks its label over a small caption, both inside the pill —
+   tightened so the two-line button stays the same height as the ghost button.
+   (.btn.cta-stack to outrank .btn's padding shorthand defined later in file) */
+.btn.cta-stack {
   flex-direction: column;
-  gap: 0.05rem;
-  padding-top: 0.6rem;
-  padding-bottom: 0.6rem;
-  line-height: 1.1;
+  justify-content: center;
+  gap: 0;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  line-height: 1.05;
 }
 
 /* half the button's font-size, light gray, sitting on the white pill */
