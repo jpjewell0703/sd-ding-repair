@@ -220,16 +220,17 @@ body.intro-lock {
   position: fixed;
   inset: 0;
   z-index: -2;
-  /* one continuous deep-space field the whole site floats on — soft radial
-     glows over a near-uniform dark base, so sections blend with no hard line */
+  /* one continuous deep-space field the whole site floats on — a single
+     near-uniform dark base with only very soft, low-contrast glows so there
+     is no light-top / dark-bottom band or hard seam between sections */
   background: radial-gradient(
-      120% 80% at 50% -10%,
-      #16315e 0%,
-      transparent 55%
+      120% 90% at 50% -20%,
+      rgba(22, 49, 94, 0.45) 0%,
+      transparent 60%
     ),
-    radial-gradient(90% 70% at 85% 30%, rgba(150, 194, 255, 0.1) 0%, transparent 55%),
-    radial-gradient(80% 60% at 10% 75%, rgba(70, 120, 205, 0.12) 0%, transparent 55%),
-    linear-gradient(180deg, #0d2147 0%, #0a1628 50%, #0a162800 100%), var(--space);
+    radial-gradient(90% 70% at 85% 30%, rgba(150, 194, 255, 0.05) 0%, transparent 60%),
+    radial-gradient(80% 60% at 10% 75%, rgba(70, 120, 205, 0.06) 0%, transparent 60%),
+    var(--space);
 }
 
 .wave-bg::before,
@@ -242,7 +243,7 @@ body.intro-lock {
   bottom: -10vh;
   background-repeat: repeat-x;
   background-size: 50% 100%;
-  opacity: 0.25;
+  opacity: 0.1;
   background-image: radial-gradient(
     ellipse 50% 60% at 50% 100%,
     var(--teal-glow) 0%,
@@ -253,7 +254,7 @@ body.intro-lock {
 
 .wave-bg::after {
   bottom: -20vh;
-  opacity: 0.18;
+  opacity: 0.07;
   animation-duration: 24s;
   animation-direction: alternate-reverse;
 }
