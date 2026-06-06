@@ -6,6 +6,7 @@ import SiteContact from "./SiteContact";
 import SiteFooter from "./SiteFooter";
 import { repairs } from "./gallery-data";
 import { categories } from "./services-data";
+import { PHONE_HREF, EMAIL, IG } from "./contact-info";
 
 const steps = [
   "Send me a photo through any of the contact methods.",
@@ -56,6 +57,23 @@ export default function Home() {
               <div className="num">48hr</div>
               <div className="label">Avg Turnaround</div>
             </div>
+          </div>
+
+          <div className="hero-actions">
+            <a href={PHONE_HREF} className="btn btn-white">
+              Call / Text
+            </a>
+            <a href={`mailto:${EMAIL}`} className="btn btn-white">
+              Email
+            </a>
+            <a
+              href={IG[0].url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-white"
+            >
+              Instagram
+            </a>
           </div>
         </div>
       </header>
