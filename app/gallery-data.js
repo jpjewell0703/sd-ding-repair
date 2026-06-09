@@ -86,6 +86,15 @@ export const repairs = [
     after: "/gallery/railding.after.jpg",
     categories: ["rail-nose", "dings-cracks", "fast-turnaround"],
   },
+  {
+    id: 10,
+    title: "Tail Rebuild",
+    tag: "Tail Repair",
+    desc: "Damaged tail rebuilt, re-glassed, and faired back to a clean line.",
+    before: "/gallery/newtail.before.jpg",
+    after: "/gallery/newtail.after.jpg",
+    categories: ["dings-cracks", "fast-turnaround"],
+  },
 ];
 
 export function getRepairsByCategory(slug) {
