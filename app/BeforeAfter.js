@@ -19,28 +19,29 @@ export default function BeforeAfter({ before, after, title }) {
 
   const onDown = (e) => {
     dragging.current = true;
-    setFromClientX(e.clientX ?? e.touches?.[0]?.clientX);
+    // Capture the pointer so we keep getting move/up events even when the
+    // cursor leaves the element (prevents the slider getting "stuck").
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+    setFromClientX(e.clientX);
   };
   const onMove = (e) => {
     if (!dragging.current) return;
-    setFromClientX(e.clientX ?? e.touches?.[0]?.clientX);
+    setFromClientX(e.clientX);
   };
-  const onUp = () => {
+  const onUp = (e) => {
     dragging.current = false;
+    e.currentTarget.releasePointerCapture?.(e.pointerId);
   };
 
   return (
     <div
       className="ba"
       ref={ref}
-      style={{ "--pos": `${pos}%` }}
-      onMouseDown={onDown}
-      onMouseMove={onMove}
-      onMouseUp={onUp}
-      onMouseLeave={onUp}
-      onTouchStart={onDown}
-      onTouchMove={onMove}
-      onTouchEnd={onUp}
+      style={{ "--pos": `${pos}%`, touchAction: "none" }}
+      onPointerDown={onDown}
+      onPointerMove={onMove}
+      onPointerUp={onUp}
+      onPointerCancel={onUp}
       role="slider"
       aria-label={`Before and after: ${title}`}
       aria-valuenow={Math.round(pos)}
