@@ -7,8 +7,6 @@ import { useRef, useState, useCallback } from "react";
 export default function BeforeAfter({ before, after, title }) {
   const [pos, setPos] = useState(90);
   const ref = useRef(null);
-  const dragging = useRef(false);
-
   const setFromClientX = useCallback((clientX) => {
     const el = ref.current;
     if (!el) return;
@@ -18,21 +16,13 @@ export default function BeforeAfter({ before, after, title }) {
   }, []);
 
   const onDown = (e) => {
-    dragging.current = true;
-    // Capture the pointer so we keep getting move/up events even when the
-    // cursor leaves the element (prevents the slider getting "stuck").
     e.currentTarget.setPointerCapture?.(e.pointerId);
     setFromClientX(e.clientX);
   };
   const onMove = (e) => {
-    if (!dragging.current) return;
+    if (e.buttons === 0) return;
     setFromClientX(e.clientX);
   };
-  const onUp = (e) => {
-    dragging.current = false;
-    e.currentTarget.releasePointerCapture?.(e.pointerId);
-  };
-
   return (
     <div
       className="ba"
@@ -40,8 +30,6 @@ export default function BeforeAfter({ before, after, title }) {
       style={{ "--pos": `${pos}%`, touchAction: "none" }}
       onPointerDown={onDown}
       onPointerMove={onMove}
-      onPointerUp={onUp}
-      onPointerCancel={onUp}
       role="slider"
       aria-label={`Before and after: ${title}`}
       aria-valuenow={Math.round(pos)}
