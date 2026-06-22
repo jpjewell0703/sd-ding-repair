@@ -5,3 +5,6 @@ out
 .vercel
 .DS_Store
 *.log
+
+# Local image backups (not deployed)
+.gallery_originals_backup/
