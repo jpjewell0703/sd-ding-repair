@@ -11,6 +11,10 @@ const BA_SIZES = "(max-width: 640px) 90vw, 400px";
 export default function BeforeAfter({ before, after, title }) {
   const [pos, setPos] = useState(90);
   const ref = useRef(null);
+  // Track the active drag explicitly instead of trusting e.buttons, which some
+  // browsers/devices report unreliably and can leave the handle stuck to the
+  // cursor after the press ends.
+  const dragging = useRef(false);
   const setFromClientX = useCallback((clientX) => {
     const el = ref.current;
     if (!el) return;
@@ -20,12 +24,17 @@ export default function BeforeAfter({ before, after, title }) {
   }, []);
 
   const onDown = (e) => {
+    dragging.current = true;
     e.currentTarget.setPointerCapture?.(e.pointerId);
     setFromClientX(e.clientX);
   };
   const onMove = (e) => {
-    if (e.buttons === 0) return;
+    if (!dragging.current) return;
     setFromClientX(e.clientX);
+  };
+  const endDrag = (e) => {
+    dragging.current = false;
+    e.currentTarget.releasePointerCapture?.(e.pointerId);
   };
   return (
     <div
@@ -34,6 +43,9 @@ export default function BeforeAfter({ before, after, title }) {
       style={{ "--pos": `${pos}%`, touchAction: "none" }}
       onPointerDown={onDown}
       onPointerMove={onMove}
+      onPointerUp={endDrag}
+      onPointerCancel={endDrag}
+      onLostPointerCapture={endDrag}
       role="slider"
       aria-label={`Before and after: ${title}`}
       aria-valuenow={Math.round(pos)}
