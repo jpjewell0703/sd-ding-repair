@@ -1,6 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import { useRef, useState, useCallback } from "react";
+
+// Gallery cards sit in a grid up to 3 wide on desktop, full width on phones.
+const BA_SIZES = "(max-width: 640px) 90vw, 400px";
 
 // Interactive draggable before/after comparison slider.
 // Falls back to colored placeholders when no image URLs are provided.
@@ -43,12 +47,20 @@ export default function BeforeAfter({ before, after, title }) {
     >
       {/* After (full, underneath) */}
       <div className="ba-img ba-after">
-        {after ? <img src={after} alt={`${title} after repair`} /> : "AFTER"}
+        {after ? (
+          <Image src={after} alt={`${title} after repair`} fill sizes={BA_SIZES} />
+        ) : (
+          "AFTER"
+        )}
       </div>
 
       {/* Before (clipped, on top) */}
       <div className="ba-img ba-before">
-        {before ? <img src={before} alt={`${title} before repair`} /> : "BEFORE"}
+        {before ? (
+          <Image src={before} alt={`${title} before repair`} fill sizes={BA_SIZES} />
+        ) : (
+          "BEFORE"
+        )}
       </div>
 
       <span className="ba-label before">BEFORE</span>

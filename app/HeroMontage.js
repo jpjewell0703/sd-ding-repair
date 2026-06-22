@@ -1,7 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { repairs } from "./gallery-data";
+
+// Floating hero cards top out around 160px wide.
+const CARD_SIZES = "160px";
 
 // Board photos that float around the hero headline, igloo.inc-style: each card
 // sits at its own depth and drifts subtly with the cursor (mouse parallax) on
@@ -102,13 +106,21 @@ export default function HeroMontage() {
               onClick={() => setOpenId(r.id)}
             >
               {r.before && (
-                <img className="hero-card-img" src={r.before} alt="" />
+                <Image
+                  className="hero-card-img"
+                  src={r.before}
+                  alt=""
+                  fill
+                  sizes={CARD_SIZES}
+                />
               )}
               {r.after && (
-                <img
+                <Image
                   className="hero-card-img hero-card-after"
                   src={r.after}
                   alt=""
+                  fill
+                  sizes={CARD_SIZES}
                   style={{ animationDelay: `${(i % 9) * 0.55}s` }}
                 />
               )}
