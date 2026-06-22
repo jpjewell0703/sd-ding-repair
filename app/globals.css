@@ -982,6 +982,11 @@ body.intro-lock {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Let pointer events fall through to the slider so pressing on a photo
+     drags the handle instead of starting a native image (ghost) drag. */
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .ba-label {

@@ -60,7 +60,13 @@ export default function BeforeAfter({ before, after, title }) {
       {/* After (full, underneath) */}
       <div className="ba-img ba-after">
         {after ? (
-          <Image src={after} alt={`${title} after repair`} fill sizes={BA_SIZES} />
+          <Image
+            src={after}
+            alt={`${title} after repair`}
+            fill
+            sizes={BA_SIZES}
+            draggable={false}
+          />
         ) : (
           "AFTER"
         )}
@@ -69,7 +75,13 @@ export default function BeforeAfter({ before, after, title }) {
       {/* Before (clipped, on top) */}
       <div className="ba-img ba-before">
         {before ? (
-          <Image src={before} alt={`${title} before repair`} fill sizes={BA_SIZES} />
+          <Image
+            src={before}
+            alt={`${title} before repair`}
+            fill
+            sizes={BA_SIZES}
+            draggable={false}
+          />
         ) : (
           "BEFORE"
         )}
