@@ -14,8 +14,8 @@ export default function SiteFooter() {
           ))}
         </div>
         <div>
-          © {new Date().getFullYear()} SD Ding Repair · San Diego, CA · Surfboard
-          Ding &amp; Damage Repair
+          © {new Date().getFullYear()} SD Ding Repair · Surfboard Ding &amp;
+          Damage Repair
         </div>
         <div style={{ marginTop: "0.4rem", opacity: 0.8 }}>
           A Sigma Sigma Holdings LLC company
