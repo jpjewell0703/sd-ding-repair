@@ -1364,6 +1364,14 @@ body.intro-lock {
   }
 }
 
+/* Communly listing card, centered under the fin boxes */
+.communly-embed {
+  display: block;
+  max-width: 420px;
+  margin: 3rem auto 0;
+  border: 0;
+}
+
 /* ---------- Footer ---------- */
 .footer {
   background: transparent;
