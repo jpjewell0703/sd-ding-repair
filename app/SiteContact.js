@@ -199,15 +199,6 @@ export default function SiteContact() {
               <FinBox key={box.key} box={box} />
             ))}
           </div>
-
-          <iframe
-            className="communly-embed"
-            src="https://communly.app/embed/MjHuA2BQ1fVp8IvvUGCI"
-            title="Communly"
-            width="100%"
-            height="430"
-            loading="lazy"
-          />
         </div>
       </div>
     </section>
